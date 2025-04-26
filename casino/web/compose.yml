@@ -12,10 +12,10 @@ services:
       app_network:
         ipv4_address: 172.20.0.3
   api:
-    image: php
-    command: docker-php-ext-install mysqli
+    image: php:8.3-fpm
     volumes:
       - ./www/html/products.php:/var/www/html/www/products.php
+    command: bash -c "docker-php-ext-install mysqli && php-fpm"
     networks:
       app_network:
         ipv4_address: 172.20.0.4
