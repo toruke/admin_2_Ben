@@ -10,25 +10,29 @@ services:
       - ./www/html/blog.html:/var/www/html/blog/blog.html
     networks:
       app_network:
-        ipv4_address: 172.17.0.3
+        ipv4_address: 172.20.0.3
   api:
     image: php
     command: docker-php-ext-install mysqli
     volumes:
-      - ./www/html/products.php:/var/www/html/www
+      - ./www/html/products.php:/var/www/html/www/products.php
     networks:
       app_network:
-        ipv4_address: 172.17.0.4
+        ipv4_address: 172.20.0.4
   db:
     image: mariadb
     environment:
       - MYSQL_ROOT_PASSWORD=mypass
+      - MYSQL_DATABASE=woodytoys
+    volumes:
+      - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
     networks:
       app_network:
-        ipv4_address: 172.17.0.5
-  networks:
-    app_network:
-      ipam:
-        driver: default
-        config:
-          - subnet: 172.17.0.0/16
+        ipv4_address: 172.20.0.5
+
+networks:
+  app_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
