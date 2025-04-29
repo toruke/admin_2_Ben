@@ -4,12 +4,15 @@ services:
     image: nginx
     ports:
       - "80:80"
-    env_file:
-      -  conf.env
+      - "443:443"
     volumes:
       - ./www/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./www/html/index.html:/var/www/html/www/index.html
       - ./www/html/blog.html:/var/www/html/blog/blog.html
+      - ./certificate/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
+      - ./certificate/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+      - certificate:/etc/ssl/private
+      - certificate:/etc/ssl/certs
     networks:
       - dmz
   api:
@@ -29,8 +32,13 @@ services:
       - db.env
     volumes:
       - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
+      - ./mariadb-custom.cnf:/etc/mysql/conf.d/custom.cnf
+      - data_adminII:/var/lib/mysql
     networks:
       - db_net
+volumes:
+  data_adminII:
+  certificate:
 networks:
   dmz:
     ipam:
