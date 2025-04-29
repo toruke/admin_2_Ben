@@ -9,30 +9,32 @@ services:
       - ./www/html/index.html:/var/www/html/www/index.html
       - ./www/html/blog.html:/var/www/html/blog/blog.html
     networks:
-      app_network:
-        ipv4_address: 172.20.0.3
+      - dmz
   api:
     image: php:8.3-fpm
     volumes:
       - ./www/html/products.php:/var/www/html/www/products.php
+    env_file:
+      - db.env
     command: bash -c "docker-php-ext-install mysqli && php-fpm"
     networks:
-      app_network:
-        ipv4_address: 172.20.0.4
+      - db_net
+      - dmz
   db:
     image: mariadb
-    environment:
-      - MYSQL_ROOT_PASSWORD=mypass
-      - MYSQL_DATABASE=woodytoys
+    env_file:
+      - root.env
+      - db.env
     volumes:
       - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
     networks:
-      app_network:
-        ipv4_address: 172.20.0.5
-
+      - db_net
 networks:
-  app_network:
+  dmz:
     ipam:
-      driver: default
       config:
         - subnet: 172.20.0.0/16
+  db_net:
+    ipam: 
+      config:
+        - subnet: 172.21.0.0/16
