@@ -4,6 +4,8 @@ services:
     image: nginx
     ports:
       - "80:80"
+    env_file:
+      -  conf.env
     volumes:
       - ./www/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./www/html/index.html:/var/www/html/www/index.html
