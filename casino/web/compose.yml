@@ -13,6 +13,7 @@ services:
       - ./certificate/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
       - certificate:/etc/ssl/private
       - certificate:/etc/ssl/certs
+      - ./letsencrypt:/etc/letsencrypt  
     networks:
       - dmz
   api:
